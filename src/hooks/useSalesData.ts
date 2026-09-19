@@ -13,6 +13,7 @@ import {
 import {
   aggregateSalespersonPerformance,
   calculateCompanySummary,
+  formatMonthsShort,
 } from '../utils/calculations';
 
 const MONTH_ORDER: Record<string, number> = {
@@ -198,11 +199,9 @@ export function useSalesData(): UseSalesDataReturn {
     }
   }, []);
 
-  // Formatted string label for single/multiple periods
+  // Formatted string label for single/multiple periods (e.g. "Jan, Mar, May")
   const selectedMonth = useMemo(() => {
-    if (selectedMonths.length === 0) return 'ALL';
-    if (selectedMonths.length === 1) return selectedMonths[0];
-    return selectedMonths.join(', ');
+    return formatMonthsShort(selectedMonths);
   }, [selectedMonths]);
 
   // Derived: Active records based on selected month filter

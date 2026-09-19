@@ -12,6 +12,7 @@ import {
 import type { DashboardView } from './Sidebar';
 import type { SalespersonPerformance } from '../../types/sales';
 import { MonthSelectionModal } from './MonthSelectionModal';
+import { formatMonthsShort } from '../../utils/calculations';
 
 export interface HeaderProps {
   onToggleMobileSidebar: () => void;
@@ -62,11 +63,8 @@ export const Header: React.FC<HeaderProps> = ({
   }, [selectedMonths, selectedMonth, availableMonths.length]);
 
   const periodDisplay = React.useMemo(() => {
-    if (isAllSelected) return 'All Months';
-    if (selectedMonths.length === 1) return selectedMonths[0];
-    if (selectedMonths.length === 2) return `${selectedMonths[0]}, ${selectedMonths[1]}`;
-    return `${selectedMonths.length} Months (${selectedMonths[0]}...)`;
-  }, [isAllSelected, selectedMonths]);
+    return formatMonthsShort(selectedMonths, availableMonths.length);
+  }, [selectedMonths, availableMonths.length]);
 
   const handleSelectAll = () => {
     if (onToggleMonth) {

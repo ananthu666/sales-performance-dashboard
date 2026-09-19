@@ -19,6 +19,7 @@ import { AchievementRankingChart } from './components/dashboard/AchievementRanki
 import { SalesTable } from './components/dashboard/SalesTable';
 import { ExportReportView } from './components/export/ExportReportView';
 import { downloadSalesTemplateFile } from './utils/excelParser';
+import { formatMonthsShort } from './utils/calculations';
 import { ToastProvider } from './components/common/Toast';
 import { useToast } from './context/ToastContext';
 import { ResetConfirmModal } from './components/common/ResetConfirmModal';
@@ -52,22 +53,9 @@ const DashboardContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isResetModalOpen, setIsResetModalOpen] = useState<boolean>(false);
 
-  // Formatted period label for headers, charts, tables, and exports
+  // Formatted period label for headers, charts, tables, and exports (e.g. "Jan, Mar, May")
   const periodLabel = useMemo(() => {
-    if (
-      selectedMonths.length === 0 ||
-      selectedMonths.includes('ALL') ||
-      (availableMonths.length > 0 && selectedMonths.length === availableMonths.length)
-    ) {
-      return 'All Months';
-    }
-    if (selectedMonths.length === 1) {
-      return selectedMonths[0];
-    }
-    if (selectedMonths.length <= 3) {
-      return selectedMonths.join(', ');
-    }
-    return `${selectedMonths.length} Months (${selectedMonths.slice(0, 2).join(', ')} +${selectedMonths.length - 2} more)`;
+    return formatMonthsShort(selectedMonths, availableMonths.length);
   }, [selectedMonths, availableMonths.length]);
 
   // View title labels for the top header
@@ -353,7 +341,7 @@ const DashboardContent: React.FC = () => {
                         ? 'Budget Target vs. Actual Sales Comparison'
                         : `Budget Target vs. Actual Sales (${periodLabel})`
                     }
-                    description="Grouped side-by-side comparison with terracotta orange (#DE5829) for target budgets and BGH plum (#631244) for actual revenue"
+                    description="Grouped side-by-side comparison with terracotta orange (#DE5829) for target budgets and plum (#631244) for actual revenue"
                   />
 
                   {/* Secondary Visual Chart: Quota Achievement Ranking against 100% Benchmark */}
